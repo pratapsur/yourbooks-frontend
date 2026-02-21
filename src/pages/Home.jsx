@@ -327,7 +327,14 @@ const Home = () => {
               
               <div className="book-info">
                 <h4 className="book-title" title={book.title}>{book.title}</h4>
-                <p className="book-progress">Last read: Page {book.currentPage}</p>
+                <p className="book-progress">
+                  {viewingFriend
+                    ? (localStorage.getItem(`progress_${book._id}`)
+                      ? `You're on Page ${localStorage.getItem(`progress_${book._id}`)}`
+                      : "Not started yet")
+                    : `Last read: Page ${book.currentPage || 1}`
+                  }
+                </p>
                 <Link to={`/read?bookId=${book._id}`} className="read-btn">Open Book</Link>
               </div>
             </div>

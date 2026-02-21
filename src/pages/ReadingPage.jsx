@@ -59,9 +59,14 @@ const ReadingPage = () => {
         });
         setBook(res.data);
         
-        let startPage = res.data.currentPage || 1;
-        
-        if (!res.data.isOwner) {
+        // --- FIXED: Smart Progress Logic ---
+        let startPage = 1; // Everyone defaults to page 1
+
+        if (res.data.isOwner) {
+          // If you own it, pull your progress from the database
+          startPage = res.data.currentPage || 1;
+        } else {
+          // If it's a friend's book, ONLY look at your personal browser memory
           const localSavedPage = localStorage.getItem(`progress_${bookId}`);
           if (localSavedPage) startPage = parseInt(localSavedPage, 10);
         }
