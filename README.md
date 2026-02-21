@@ -137,7 +137,6 @@ npm run dev
 
 ## 📸 Application Preview
 
-> Place images inside a root-level `screenshots/` folder.
 
 ![Dashboard](./screenshots/dashboard.png) ![Reader 1](./screenshots/reader1.png) ![Reader 2](./screenshots/reader2.png)
 ![Friends](./screenshots/friends.png)
