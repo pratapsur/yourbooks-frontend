@@ -1,4 +1,4 @@
-# 📚 YourBooks --- Cloud-Native E‑Reader Platform
+# 📚 YourBooks --- Cloud-Native E-Reader Platform
 
 ![MERN
 Stack](https://img.shields.io/badge/MERN-Stack-blue?style=for-the-badge&logo=mongodb)
@@ -8,7 +8,7 @@ S3](https://img.shields.io/badge/AWS-S3-orange?style=for-the-badge&logo=amazon-a
 
 🌐 **Live Application:** https://yourbooks.space
 
-YourBooks is a scalable, cloud-native e‑reader and digital library
+YourBooks is a scalable, cloud-native e-reader and digital library
 platform built using the MERN stack.\
 It enables users to upload, manage, and read PDF documents securely
 across devices while maintaining synchronized reading progress and
@@ -24,41 +24,46 @@ efficient cloud deployment.
 
 ### ☁️ Cloud-Based File Architecture
 
--   Secure PDF and image uploads using AWS S3
--   `multer-s3` integration for direct cloud storage
+-   Secure PDF and image uploads using AWS S3\
+-   `multer-s3` integration for direct cloud storage\
 -   Reduces MongoDB load by separating file storage from metadata
 
 ### 📖 Seamless Reading Experience
 
--   Persistent page tracking stored in MongoDB
--   Resume reading instantly across devices
+-   Persistent page tracking stored in MongoDB\
+-   Resume reading instantly across devices\
 -   Built with `react-pdf` for optimized document rendering
 
 ### 📱 Mobile-First Design
 
--   Fully responsive reader layout
--   Dynamic PDF scaling
--   Theme customization (Dark, Light, Sepia)
+-   Fully responsive reader layout\
+-   Dynamic PDF scaling\
+-   Theme customization (Dark, Light, Sepia)\
 -   Sticky mobile navigation for smooth usability
 
 ### 👥 Social Library System
 
--   Friend search and request functionality
--   Public library sharing
+-   Friend search and request functionality\
+-   Public library sharing\
 -   Isolated guest reading progress (stored locally in browser)
 
 ### 🔐 Secure Authentication
 
--   JWT-based authentication
--   Password hashing using bcrypt
+-   JWT-based authentication\
+-   Password hashing using bcrypt\
 -   Protected REST API routes
 
 ------------------------------------------------------------------------
 
 ## 🏗 System Architecture Overview
 
-Frontend (Vercel) ↓ Backend API (Render) ↓ MongoDB Atlas (User &
-Metadata) ↓ AWS S3 (File Storage)
+Frontend (Vercel)\
+↓\
+Backend API (Render)\
+↓\
+MongoDB Atlas (User & Metadata)\
+↓\
+AWS S3 (File Storage)
 
 This separation ensures scalability, security, and efficient resource
 utilization.
@@ -69,18 +74,18 @@ utilization.
 
 ### Frontend
 
--   React.js (Vite)
--   React Router DOM
--   React-PDF
+-   React.js (Vite)\
+-   React Router DOM\
+-   React-PDF\
 -   Hosted on Vercel
 
 ### Backend
 
--   Node.js
--   Express.js
--   MongoDB Atlas (Mongoose ODM)
--   AWS SDK (S3 Integration)
--   JWT & Bcrypt Authentication
+-   Node.js\
+-   Express.js\
+-   MongoDB Atlas (Mongoose ODM)\
+-   AWS SDK (S3 Integration)\
+-   JWT & Bcrypt Authentication\
 -   Hosted on Render
 
 ------------------------------------------------------------------------
@@ -130,42 +135,30 @@ npm run dev
 
 ------------------------------------------------------------------------
 
-## 📸 Screenshots
+## 📸 Application Preview
 
-Place your images inside a root-level folder:
+> Place images inside a root-level `screenshots/` folder.
 
-    screenshots/
-       dashboard.png
-       reader1.png
-       reader2.png
-       friends.png
-
-Then add them like this:
-
-    ## 📸 Application Preview
-
-    ![Dashboard](./screenshots/dashboard.png)
-    ![Reader 1](./screenshots/reader1.png)
-    ![Reader 2](./screenshots/reader2.png)
-    ![Friends](./screenshots/friends.png)
+![Dashboard](./screenshots/dashboard.png) ![Reader 1](./screenshots/reader1.png) ![Reader 2](./screenshots/reader2.png)
+![Friends](./screenshots/friends.png)
 
 ------------------------------------------------------------------------
 
 ## 📦 Deployment Stack
 
--   Frontend → Vercel
--   Backend → Render
--   Database → MongoDB Atlas
+-   Frontend → Vercel\
+-   Backend → Render\
+-   Database → MongoDB Atlas\
 -   File Storage → AWS S3
 
 ------------------------------------------------------------------------
 
 ## 🔮 Planned Enhancements
 
--   EPUB file support
--   Text highlighting & annotations
--   Offline PWA mode
--   Real-time collaborative reading
+-   EPUB file support\
+-   Text highlighting & annotations\
+-   Offline PWA mode\
+-   Real-time collaborative reading\
 -   Book recommendations system
 
 ------------------------------------------------------------------------
@@ -174,7 +167,7 @@ Then add them like this:
 
 **Pratap Suryavanshi**\
 Electronics & Computer Engineering Student\
-Full‑Stack Developer \| Cloud Enthusiast
+Full-Stack Developer \| Cloud Enthusiast
 
 ------------------------------------------------------------------------
 
