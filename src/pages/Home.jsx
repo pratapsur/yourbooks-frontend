@@ -228,16 +228,16 @@ const Home = () => {
               </label>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: '#1a1a1a', padding: '15px', borderRadius: '8px', border: '1px solid #333' }}>
-              <span style={{ fontWeight: 'bold', color: isPublic ? '#28a745' : '#888' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', background: '#1a1a1a', padding: '15px', borderRadius: '8px', border: '1px solid #333' }}>
+              <span style={{ fontWeight: 'bold', color: isPublic ? '#28a745' : '#888', flex: 1, fontSize: '0.9rem', lineHeight: '1.4' }}>
                 {isPublic ? '🌍 Public Book (Visible to Friends)' : '🔒 Private Book (Only you)'}
               </span>
-              <button 
+              <button
                 type="button"
                 onClick={() => setIsPublic(!isPublic)}
                 style={{
-                  width: '50px', height: '26px', borderRadius: '15px', border: 'none', cursor: 'pointer',
-                  background: isPublic ? '#28a745' : '#555', position: 'relative', transition: '0.3s'
+                  width: '50px', minWidth: '50px', height: '26px', borderRadius: '15px', border: 'none', cursor: 'pointer',
+                  background: isPublic ? '#28a745' : '#555', position: 'relative', transition: '0.3s', flexShrink: 0
                 }}
               >
                 <div style={{
