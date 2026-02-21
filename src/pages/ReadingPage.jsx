@@ -13,7 +13,11 @@ const ReadingPage = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [loading, setLoading] = useState(true);
   
-  // --- NEW: Theme State (Remembers your choice!) ---
+  // --- Responsive State ---
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const isMobile = windowWidth <= 768;
+
+  // --- Theme State ---
   const [theme, setTheme] = useState(localStorage.getItem('readerTheme') || 'dark');
   
   const location = useLocation();
@@ -29,6 +33,13 @@ const ReadingPage = () => {
     sepia: { bg: '#f4ecd8', nav: '#e8ddc5', text: '#5b4636', border: '#d3c4a9', pdfFilter: 'sepia(0.5) contrast(0.9)' }
   };
   const currentTheme = themes[theme];
+
+  // Window resize listener for responsive PDF scaling
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Save theme choice when changed
   useEffect(() => {
@@ -48,10 +59,8 @@ const ReadingPage = () => {
         });
         setBook(res.data);
         
-        // --- NEW: Smart Progress Resuming ---
         let startPage = res.data.currentPage || 1;
         
-        // If it's a friend's book, check local storage for your personal bookmark!
         if (!res.data.isOwner) {
           const localSavedPage = localStorage.getItem(`progress_${bookId}`);
           if (localSavedPage) startPage = parseInt(localSavedPage, 10);
@@ -78,7 +87,6 @@ const ReadingPage = () => {
     if (newPage >= 1 && newPage <= numPages) {
       setPageNumber(newPage);
       
-      // Save progress to Database if it's yours
       if (book.isOwner) {
         try {
           await axios.put(`https://yourbooks-backend.onrender.com/api/books/${bookId}/page`, 
@@ -89,7 +97,6 @@ const ReadingPage = () => {
           console.error("Failed to save progress:", error);
         }
       } else {
-        // Save progress to Local Storage if it's your friend's!
         localStorage.setItem(`progress_${bookId}`, newPage);
       }
     }
@@ -100,63 +107,111 @@ const ReadingPage = () => {
   return (
     <div style={{ background: currentTheme.bg, minHeight: '100vh', color: currentTheme.text, display: 'flex', flexDirection: 'column', transition: '0.3s ease' }}>
       
-      {/* --- NAVBAR --- */}
-      <div style={{ padding: '15px 30px', background: currentTheme.nav, borderBottom: `1px solid ${currentTheme.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
+      {/* --- TOP NAVBAR --- */}
+      <div style={{ 
+        padding: isMobile ? '10px 15px' : '15px 30px', 
+        background: currentTheme.nav, 
+        borderBottom: `1px solid ${currentTheme.border}`, 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50
+      }}>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <button onClick={() => navigate('/')} style={{ padding: '8px 16px', background: currentTheme.border, color: currentTheme.text, border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-            🔙 Back to Library
+        {/* Left Side: Back & Title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '15px', maxWidth: '70%' }}>
+          <button onClick={() => navigate('/')} style={{ padding: '8px 12px', background: currentTheme.border, color: currentTheme.text, border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: isMobile ? '0.8rem' : '1rem' }}>
+            {isMobile ? '🔙' : '🔙 Back to Library'}
           </button>
-          <h2 style={{ margin: 0, fontSize: '1.2rem' }}>{book.title}</h2>
           
-          {!book.isOwner && (
+          <h2 style={{ 
+            margin: 0, 
+            fontSize: isMobile ? '1rem' : '1.2rem', 
+            whiteSpace: 'nowrap', 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis' 
+          }}>
+            {book.title}
+          </h2>
+          
+          {!book.isOwner && !isMobile && (
              <span style={{ background: '#4a90e2', color: 'white', padding: '4px 10px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                👁️ Read-Only
              </span>
           )}
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          {/* --- NEW: Theme Selector --- */}
+        {/* Right Side: Theme Selector */}
+        <div>
           <select 
             value={theme} 
             onChange={(e) => setTheme(e.target.value)}
-            style={{ padding: '8px', borderRadius: '8px', background: currentTheme.bg, color: currentTheme.text, border: `1px solid ${currentTheme.border}`, cursor: 'pointer', outline: 'none', fontWeight: 'bold' }}
+            style={{ padding: '8px', borderRadius: '8px', background: currentTheme.bg, color: currentTheme.text, border: `1px solid ${currentTheme.border}`, cursor: 'pointer', outline: 'none', fontWeight: 'bold', fontSize: isMobile ? '0.8rem' : '1rem' }}
           >
-            <option value="dark">🌙 Dark Mode</option>
-            <option value="sepia">☕ Sepia Mode</option>
-            <option value="light">☀️ Light Mode</option>
+            <option value="dark">🌙 {isMobile ? '' : 'Dark'}</option>
+            <option value="sepia">☕ {isMobile ? '' : 'Sepia'}</option>
+            <option value="light">☀️ {isMobile ? '' : 'Light'}</option>
           </select>
-
-          <button disabled={pageNumber <= 1} onClick={() => changePage(-1)} style={{ padding: '8px 16px', background: pageNumber <= 1 ? currentTheme.border : '#4a90e2', color: 'white', border: 'none', borderRadius: '8px', cursor: pageNumber <= 1 ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}>
-            ◀ Prev
-          </button>
-          <span style={{ fontWeight: 'bold', minWidth: '120px', textAlign: 'center' }}>
-            Page {pageNumber} of {numPages || '--'}
-          </span>
-          <button disabled={pageNumber >= numPages} onClick={() => changePage(1)} style={{ padding: '8px 16px', background: pageNumber >= numPages ? currentTheme.border : '#4a90e2', color: 'white', border: 'none', borderRadius: '8px', cursor: pageNumber >= numPages ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}>
-            Next ▶
-          </button>
         </div>
       </div>
 
       {/* --- PDF CONTAINER --- */}
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px', overflowY: 'auto' }}>
-        {/* Notice the filter applied here to match the PDF to the theme! */}
+      {/* Added paddingBottom to prevent the sticky footer from covering text */}
+      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: isMobile ? '10px' : '20px', paddingBottom: '90px', overflowY: 'auto' }}>
         <div style={{ filter: currentTheme.pdfFilter, transition: 'filter 0.3s ease', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
           <Document
             file={book.pdfUrl.startsWith('http') ? book.pdfUrl : `https://yourbooks-backend.onrender.com/${book.pdfUrl.replace(/\\/g, '/')}`}
             onLoadSuccess={onDocumentLoadSuccess}
-            loading={<div style={{ color: currentTheme.text, padding: '20px' }}>Loading Document Pages...</div>}
+            loading={<div style={{ color: currentTheme.text, padding: '20px', textAlign: 'center' }}>Loading pages...</div>}
           >
             <Page 
               pageNumber={pageNumber} 
               renderTextLayer={true}
               renderAnnotationLayer={true}
-              width={Math.min(window.innerWidth * 0.9, 800)} 
+              // Dynamically scale based on window size to prevent overflow
+              width={Math.min(windowWidth - (isMobile ? 20 : 60), 800)} 
             />
           </Document>
         </div>
+      </div>
+
+      {/* --- STICKY BOTTOM CONTROL BAR --- */}
+      <div style={{ 
+        position: 'fixed', 
+        bottom: 0, 
+        left: 0, 
+        right: 0, 
+        background: currentTheme.nav, 
+        borderTop: `1px solid ${currentTheme.border}`, 
+        padding: '15px', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        gap: '20px',
+        zIndex: 50,
+        boxShadow: '0 -4px 10px rgba(0,0,0,0.1)'
+      }}>
+        <button 
+          disabled={pageNumber <= 1} 
+          onClick={() => changePage(-1)} 
+          style={{ padding: '10px 20px', background: pageNumber <= 1 ? currentTheme.border : '#4a90e2', color: 'white', border: 'none', borderRadius: '8px', cursor: pageNumber <= 1 ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
+        >
+          ◀ Prev
+        </button>
+        
+        <span style={{ fontWeight: 'bold', minWidth: '100px', textAlign: 'center', fontSize: isMobile ? '0.9rem' : '1rem' }}>
+          {pageNumber} / {numPages || '--'}
+        </span>
+        
+        <button 
+          disabled={pageNumber >= numPages} 
+          onClick={() => changePage(1)} 
+          style={{ padding: '10px 20px', background: pageNumber >= numPages ? currentTheme.border : '#4a90e2', color: 'white', border: 'none', borderRadius: '8px', cursor: pageNumber >= numPages ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
+        >
+          Next ▶
+        </button>
       </div>
       
     </div>
