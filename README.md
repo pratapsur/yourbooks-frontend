@@ -167,7 +167,6 @@ npm run dev
 **Pratap Suryavanshi**\
 Electronics & Computer Engineering Student\
 Full-Stack Developer \| Cloud Enthusiast\
-
 **Bhargavi Deshmukh**\
 Computer Science & Engineering Student\
 Software Developer
